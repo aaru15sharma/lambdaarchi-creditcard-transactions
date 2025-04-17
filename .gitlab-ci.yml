@@ -1,0 +1,52 @@
+image: python:3.12
+
+variables:
+  DATASET_NUMBER: "16"  # Change this number to match your dataset
+
+stages:
+  - format
+  - complexity
+
+format_check:
+  stage: format
+  before_script:
+    - pip install black
+  script:
+    - echo "Checking code formatting with black..."
+    - black --check . || (echo "❌ Code formatting check failed. Please run 'black .' to format your code." && exit 1)
+    - echo "✅ Code formatting check passed!"
+  only:
+    - merge_requests
+    - main
+
+
+
+function_length_check:
+  stage: complexity
+  before_script:
+    - pip install flake8 mccabe
+  script:
+    - echo "Checking function length and complexity..."
+    - |
+      flake8 . --max-complexity=10 --max-function-length=50 \
+        --select=C901,CFQ \
+        --per-file-ignores="__init__.py:F401" \
+        --format="%(path)s:%(row)d: [%(code)s] %(text)s" > flake8_output.txt || true
+      
+      if [ -s flake8_output.txt ]; then
+        echo "❌ Found the following issues:"
+        echo "------------------------------"
+        echo "Complexity issues (C901):"
+        grep "C901" flake8_output.txt || echo "None"
+        echo
+        echo "Function length issues (CFQ):"
+        grep "CFQ" flake8_output.txt || echo "None"
+        echo "------------------------------"
+        echo "Please refactor the functions above to reduce their complexity and/or length."
+        exit 1
+      else
+        echo "✅ All functions are within acceptable length and complexity!"
+      fi
+  only:
+    - merge_requests
+    - main
