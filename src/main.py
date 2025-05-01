@@ -6,7 +6,7 @@ from data_processor import DataProcessor
 
 def main():
     load_dotenv()
-    print("[INFO] Starting Spark session...")
+    print("Starting Spark session...")
     jar_path = os.getenv("MYSQL_JAR_PATH")
     if not jar_path or not os.path.exists(jar_path):
         raise FileNotFoundError(f"MySQL connector JAR not found at {jar_path}")
@@ -15,11 +15,11 @@ def main():
         .config("spark.jars", jar_path)
         .getOrCreate()
     )
-    print("[INFO] Spark session created.")
+    print("Spark session created.")
     dp = DataProcessor(spark)
     dp.run()
     spark.stop()
-    print("[INFO] Spark session stopped.")
+    print("Spark session stopped.")
 
 
 if __name__ == "__main__":

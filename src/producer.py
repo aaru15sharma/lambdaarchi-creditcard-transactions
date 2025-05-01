@@ -86,7 +86,7 @@ if __name__ == "__main__":
         "--date",
         type=str,
         default=None,
-        help="(Optional) Date to stream, format m/d/yy, e.g., '4/1/25'. Streams ALL if not specified.",
+        help="Date to stream, format m/d/yy, e.g., '4/1/25'. Streams ALL if not specified.",
     )
     args = parser.parse_args()
     run_producer(args.date)

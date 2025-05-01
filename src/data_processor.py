@@ -15,10 +15,10 @@ class DataProcessor:
         self.mysql_password = os.getenv("MYSQL_PASSWORD")
         self.dataset_dir = os.getenv("DATASET_DIR")
         self.db_name = os.getenv("MYSQL_DB")
-        print(f"[INFO] Initialized DataProcessor with DB: {self.mysql_url}")
+        print(f"Initialized DataProcessor with DB: {self.mysql_url}")
 
     def create_mysql_tables(self):
-        print("[INFO] Dropping and creating database and tables in MySQL...")
+        print("Dropping and creating database and tables in MySQL...")
         conn = connect(
             host=os.getenv("MYSQL_HOST"),
             user=os.getenv("MYSQL_USER"),
@@ -27,9 +27,9 @@ class DataProcessor:
         )
         cursor = conn.cursor()
         cursor.execute(f"DROP DATABASE IF EXISTS {self.db_name};")
-        print(f"[INFO] Database `{self.db_name}` dropped (if existed).")
+        print(f"Database `{self.db_name}` dropped (if existed).")
         cursor.execute(f"CREATE DATABASE {self.db_name};")
-        print(f"[INFO] Database `{self.db_name}` created.")
+        print(f"Database `{self.db_name}` created.")
         conn.close()
         conn = connect(
             host=os.getenv("MYSQL_HOST"),
@@ -93,7 +93,7 @@ class DataProcessor:
         ]
         for sql in table_sqls:
             cursor.execute(sql)
-            print(f"[DEBUG] Table creation executed:\n{sql.split('(')[0].strip()}")
+            print(f"Table creation executed:\n{sql.split('(')[0].strip()}")
         conn.close()
         print("All tables created/ensured.")
 
@@ -107,7 +107,7 @@ class DataProcessor:
         }
         for csv_file, table in csv_table_map.items():
             path = os.path.join(self.dataset_dir, csv_file)
-            print(f"[INFO] Loading {csv_file} to MySQL table `{table}`...")
+            print(f"Loading {csv_file} to MySQL table `{table}`...")
             df = self.spark.read.csv(path, header=True, inferSchema=True)
             if table == "cards":
                 df = df.withColumn(
@@ -125,7 +125,7 @@ class DataProcessor:
             ).mode(
                 "append"
             ).save()
-            print(f"[INFO] {csv_file} loaded into `{table}` ({df.count()} rows).")
+            print(f"{csv_file} loaded into `{table}` ({df.count()} rows).")
 
     def run(self):
         print("Beginning MySQL database/table setup and data load process...")
