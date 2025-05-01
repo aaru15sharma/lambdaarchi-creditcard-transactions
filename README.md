@@ -111,6 +111,15 @@ Processes stream_transactions.csv to:
 
         MySQL – Relational data store
 
+## Required Packages
+
+Ensure you have the following Python packages installed (via `pip install -r requirements.txt`):
+
+        kafka-python
+        python-dotenv
+        pymysql
+        mysql-connector-python
+
 ## Setting up the project
 
 ### 1. Download and Setup Kafka
@@ -187,7 +196,7 @@ All sensitive credentials and paths should be configured in a `.env` file.
 | `output/stream_transactions.csv` | Real-time processed transactions (pending/declined) |
 | `output/batch_transactions.csv` | Finalized transactions post batch processing |
 | `output/cards_updated.csv` | Updated balances and limits |
-| `putput/customers_updated.csv` | Updated credit scores |
+| `output/customers_updated.csv` | Updated credit scores |
 
 ## License and Usage Restrictions
 

@@ -1,5 +1,4 @@
 kafka-python
 python-dotenv
 pymysql
-pandas
 mysql-connector-python
