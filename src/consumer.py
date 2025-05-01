@@ -6,12 +6,13 @@ from dotenv import load_dotenv
 from helper import is_location_close_enough
 import mysql.connector  # type: ignore
 
-#load customer data from mysql
+
+# load customer data from mysql
 def load_customers_mysql():
     conn = get_mysql_connection()
     cursor = conn.cursor(dictionary=True)
     cursor.execute("SELECT customer_id, address FROM customers")
-    #bulding zip_code dictionary
+    # bulding zip_code dictionary
     cust_map = {}
     for row in cursor.fetchall():
         address = row["address"]
@@ -21,7 +22,8 @@ def load_customers_mysql():
     conn.close()
     return cust_map
 
-#loading cards and builds card_state
+
+# loading cards and builds card_state
 def load_cards_mysql(cust_map):
     conn = get_mysql_connection()
     cursor = conn.cursor(dictionary=True)
@@ -45,7 +47,8 @@ def load_cards_mysql(cust_map):
     conn.close()
     return card_map
 
-#validates a transaction against rules, updates card's pending_balance, returns structured output
+
+# validates a transaction against rules, updates card's pending_balance, returns structured output
 def process_transaction(tx, card_state):
     """Validate and process a single transaction, updating the card state."""
     card_id = tx.get("card_id", "")
@@ -77,25 +80,25 @@ def process_transaction(tx, card_state):
                 f"Processed transaction_id {tx['transaction_id']} - REFUND/CANCELLATION | Pending balance updated"
             )
         else:
-            #rule1
+            # rule1
             if amount >= 0.5 * limit:
                 status = "declined"
                 decline_reason = "Transaction ≥ 50% of credit limit"
                 declined = True
-            #rule2
+            # rule2
             elif not is_location_close_enough(user_zip, merchant_zip):
                 status = "declined"
                 decline_reason = "Merchant location too far from user"
                 declined = True
-            #rule3
+            # rule3
             elif amount > 0 and (pending + amount) > limit:
                 status = "declined"
                 decline_reason = "Pending balance exceeds limit"
                 declined = True
-            #if all rules passed, mark pending
+            # if all rules passed, mark pending
             else:
                 status = "pending"
-            #add to balance
+            # add to balance
             if not declined and status == "pending":
                 card_info["pending_balance"] += amount
 
@@ -116,12 +119,14 @@ def process_transaction(tx, card_state):
     }
     return tx_out, status, transaction_type
 
-#write to csv
+
+# write to csv
 def write_transaction(writer, tx_out, output_fields):
     """Write a transaction row to CSV."""
     writer.writerow({f: tx_out.get(f, "") for f in output_fields})
 
-#main function running consumer
+
+# main function running consumer
 def run_consumer(
     card_state, output_fields, stream_output_path, kafka_topic, kafka_bootstrap_servers
 ):
@@ -142,7 +147,7 @@ def run_consumer(
     with open(stream_output_path, "w", newline="") as fout:
         writer = csv.DictWriter(fout, fieldnames=output_fields)
         writer.writeheader()
-        #reads each kafka message, processes it, writes to CSV, and logs results
+        # reads each kafka message, processes it, writes to CSV, and logs results
         for message in consumer:
             tx = message.value
             tx_out, status, transaction_type = process_transaction(tx, card_state)

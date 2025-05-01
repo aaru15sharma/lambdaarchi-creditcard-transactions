@@ -25,13 +25,15 @@ def create_spark_session():
         .getOrCreate()
     )
 
+
 def normalize_expiration_date(date_str):
     try:
         return datetime.strptime(date_str, "%m/%y").strftime("%Y-%m-01")
     except Exception:
         return None
 
-#disables foreign key checks and clears all data from transactions, cards, and customers.
+
+# disables foreign key checks and clears all data from transactions, cards, and customers.
 def truncate_mysql_tables():
     conn = mysql.connector.connect(
         host="localhost", user=MYSQL_USER, password=MYSQL_PASSWORD, database=MYSQL_DB
@@ -47,20 +49,23 @@ def truncate_mysql_tables():
     conn.close()
     print("MySQL tables truncated successfully.")
 
-#read csv
+
+# read csv
 def read_csv(path):
     with open(path, "r", newline="", encoding="utf-8") as f:
         reader = csv.DictReader(f)
         return list(reader)
 
-#write to csv
+
+# write to csv
 def write_csv(path, data, fieldnames):
     with open(path, "w", newline="", encoding="utf-8") as f:
         writer = csv.DictWriter(f, fieldnames=fieldnames)
         writer.writeheader()
         writer.writerows(data)
 
-#approve all pending transactions
+
+# approve all pending transactions
 def approve_pending_transactions(transactions):
     count = 0
     for txn in transactions:
@@ -70,7 +75,8 @@ def approve_pending_transactions(transactions):
     print(f"Approved {count} pending transactions")
     return transactions
 
-#update card balances
+
+# update card balances
 def update_card_balances(transactions, cards):
     card_adjustments = defaultdict(float)
     for txn in transactions:
@@ -91,10 +97,11 @@ def update_card_balances(transactions, cards):
     print(f"Updated balances for {len(cards)} cards")
     return cards
 
-#updated credit scores
+
+# updated credit scores
 def update_customer_credit_scores(cards, customers):
     customer_cards = defaultdict(list)
-    #collect all cards
+    # collect all cards
     for card in cards:
         customer_cards[card["customer_id"]].append(card)
     # compute total usage %, score adjustment and then update the scores
@@ -113,7 +120,8 @@ def update_customer_credit_scores(cards, customers):
     print(f"Recalculated credit scores for {len(customers)} customers")
     return customers
 
-#reduce credit limits (iff score dropped)
+
+# reduce credit limits (iff score dropped)
 def reduce_credit_limits_if_needed(cards, customers):
     customers_map = {row["customer_id"]: row for row in customers}
     reduced = 0
@@ -121,7 +129,7 @@ def reduce_credit_limits_if_needed(cards, customers):
         cust_id = card["customer_id"]
         cust = customers_map[cust_id]
         score_change = int(cust.get("credit_score_change", 0))
-        #in score_Change<0, recalculate credit limit, lower
+        # in score_Change<0, recalculate credit limit, lower
         if score_change < 0:
             old_limit = float(card["credit_limit"])
             new_limit = calculate_new_credit_limit(old_limit, score_change)
@@ -130,7 +138,8 @@ def reduce_credit_limits_if_needed(cards, customers):
     print(f"Reduced limits for {reduced} cards due to score drop")
     return cards
 
-#convert dictionary to DFs
+
+# convert dictionary to DFs
 def convert_to_clean_df(
     spark, records, required_fields, date_columns=None, timestamp_columns=None
 ):
@@ -154,7 +163,8 @@ def convert_to_clean_df(
     )
     return df
 
-#df to sql
+
+# df to sql
 def write_to_mysql(df, table_name):
     row_count = df.count()
     df.write.format("jdbc").option("url", MYSQL_URL).option(
