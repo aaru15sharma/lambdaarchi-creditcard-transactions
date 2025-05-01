@@ -13,7 +13,7 @@ customer_id,name,phone_number,address,email,credit_score,annual_income,credit_sc
 12,Annette Dickson,914-669-7935,"7515 Burns Expressway, Niagara Falls, NY 18754",wigginssamuel@example.org,767,113300.0,15
 13,Jesse Haney,789-843-8847,"3889 Michael Drive, Cheektowaga, NY 19039",btaylor@example.net,757,60800.0,15
 14,Melissa Henderson,985-308-5677,"4040 Cooper Green, Albany, NY 11098",jodimorris@example.org,657,22300.0,5
-15,Lori Johnson,399-636-4403,"6565 Dawn Radial, Rochester, NY 15219",riversryan@example.org,725,59100.0,15
+15,Lori Johnson,399-636-4403,"6565 Dawn Radial, Rochester, NY 15219",riversryan@example.org,720,59100.0,10
 16,Krista Terrell,811-573-2899,"8560 Oneal Cape, Niagara Falls, NY 17834",zavalajustin@example.net,762,842200.0,15
 17,Richard Odom,291-256-6701,"9991 Thomas Ranch, Niagara Falls, NY 16316",christopherlee@example.org,715,105100.0,15
 18,Julie Manning,469-614-8235,"4629 Gabrielle Inlet, Binghamton, NY 14878",vwest@example.net,674,58300.0,5
