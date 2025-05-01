@@ -157,17 +157,22 @@ bin/kafka-topics.sh --create --topic project4 --bootstrap-server localhost:9092 
 
 ## Running the project
 
-Terminal 1 (Consumer):
+Terminal 1 (Data Loading):
+```bash
+python src/main.py
+```
+
+Terminal 2 (Consumer):
 ```bash
 python src/consumer.py
 ```
 
-Terminal 2 (Producer):
+Terminal 3 (Producer):
 ```bash
 python src/producer.py
 ```
 
-Terminal 3 (Batch Processing):
+Terminal 4 (Batch Processing):
 ```bash
 python src/batch_processor.py
 ```
