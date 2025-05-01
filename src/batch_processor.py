@@ -33,7 +33,6 @@ def normalize_expiration_date(date_str):
         return None
 
 
-# disables foreign key checks and clears all data from transactions, cards, and customers.
 def truncate_mysql_tables():
     conn = mysql.connector.connect(
         host="localhost", user=MYSQL_USER, password=MYSQL_PASSWORD, database=MYSQL_DB
@@ -47,7 +46,6 @@ def truncate_mysql_tables():
     conn.commit()
     cursor.close()
     conn.close()
-    print("MySQL tables truncated successfully.")
 
 
 # read csv
