@@ -178,26 +178,26 @@ def write_to_mysql(df, table_name):
 def main():
     spark = create_spark_session()
 
-    stream_transactions = read_csv("data/output/stream_transactions.csv")
+    stream_transactions = read_csv("data/results/stream_transactions.csv")
     cards = read_csv("data/dataset_10/cards.csv")
     customers = read_csv("data/dataset_10/customers.csv")
 
     batch_transactions = copy.deepcopy(stream_transactions)
     batch_transactions = approve_pending_transactions(batch_transactions)
     write_csv(
-        "data/output/batch_transactions.csv",
+        "data/results/batch_transactions.csv",
         batch_transactions,
         fieldnames=batch_transactions[0].keys(),
     )
 
     cards = update_card_balances(batch_transactions, cards)
-    write_csv("data/output/cards_updated.csv", cards, fieldnames=cards[0].keys())
+    write_csv("data/results/cards_updated.csv", cards, fieldnames=cards[0].keys())
     customers = update_customer_credit_scores(cards, customers)
     write_csv(
-        "data/output/customers_updated.csv", customers, fieldnames=customers[0].keys()
+        "data/results/customers_updated.csv", customers, fieldnames=customers[0].keys()
     )
     cards = reduce_credit_limits_if_needed(cards, customers)
-    write_csv("data/output/cards_updated.csv", cards, fieldnames=cards[0].keys())
+    write_csv("data/results/cards_updated.csv", cards, fieldnames=cards[0].keys())
 
     truncate_mysql_tables()
 

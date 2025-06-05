@@ -189,7 +189,7 @@ def initialize_consumer_config():
     load_dotenv()
     KAFKA_BOOTSTRAP_SERVERS = os.getenv("KAFKA_BOOTSTRAP_SERVERS")
     KAFKA_TOPIC = os.getenv("KAFKA_TOPIC")
-    OUTPUT_DIR = os.getenv("OUTPUT_DIR", "data/output")
+    OUTPUT_DIR = os.getenv("OUTPUT_DIR")
     os.makedirs(OUTPUT_DIR, exist_ok=True)
     STREAM_OUTPUT_PATH = os.path.join(OUTPUT_DIR, "stream_transactions.csv")
 
