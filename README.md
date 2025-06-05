@@ -1,4 +1,4 @@
-# Project-4
+# Lambda Architecture - Credit Card Transactions
 
 ## Table of Contents
 
